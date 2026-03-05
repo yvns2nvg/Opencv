@@ -78,7 +78,8 @@ cv.destroyAllWindows()  # 모든 윈도우 창 닫기 및 메모리 해제
 
 - 결과 이미지(예시):
 
-![0305-1 결과 예시](0305/result-1.png)
+<img width="2864" height="996" alt="result-1" src="https://github.com/user-attachments/assets/074510bf-7930-4ec9-a1ca-51c45e4dcaf0" />
+
 
 
 ---
@@ -169,7 +170,8 @@ cv.destroyAllWindows()
 
 - 결과 이미지(예시):
 
-![0305-2 결과 예시](0305/result-2.png)
+<img width="1422" height="998" alt="result-2" src="https://github.com/user-attachments/assets/1d3bdb31-1594-4b56-ae31-b788e9087ab0" />
+
 
 
 ---
@@ -275,10 +277,10 @@ cv.destroyAllWindows()
   - 저장: `cv.imwrite('0305/captured_roi.jpg', selected_roi)` — `s` 키로 선택한 ROI를 파일로 저장합니다.
 
 - 결과 이미지(예시):
+<img width="2166" height="1018" alt="result-3" src="https://github.com/user-attachments/assets/ba8434a0-dab0-4579-892d-3f715d29cc91" />
 
-![0305-3 결과 예시](0305/result-3.png)
+<img width="1482" height="980" alt="result-4" src="https://github.com/user-attachments/assets/08e65c8d-90b5-4966-9218-41866c294f48" />
 
-![0305-3 결과 예시](0305/result-4.png)
 
 ---
 
