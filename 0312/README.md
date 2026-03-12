@@ -157,8 +157,7 @@ cv2.destroyAllWindows()
     > `getRotationMatrix2D`로 만든 $2 \times 3$ 행렬의 세 번째 열(인덱스 2)은 $X, Y$ 축 이동을 관장합니다. 여기에 각각 요구사항대로 $80, -40$을 더해준 후, `warpAffine`으로 이미지에 반영합니다.
 
 ### 4. 결과 사진
-<!-- 여기에 Rotation & Transform 결과 변화 사진 캡처 삽입 -->
-![Assignment 2 결과]()
+![Assignment 2 결과](images/2-res1.png)
 
 ---
 
@@ -235,4 +234,4 @@ print(f"가장 먼 객체: {max(filtered, key=lambda k: filtered[k]['depth'])}")
 
 ### 4. 결과 사진
 <!-- 여기에 Depth 결과물 콘솔 메세지 및 Disparity Map, Depth Map 캡처 삽입 -->
-![Assignment 3 결과]()
+![Assignment 3 결과](images/3-res1.png)
