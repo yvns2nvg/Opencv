@@ -1,12 +1,14 @@
 import cv2
 import numpy as np
 import os
+from pathlib import Path
 
 # 1. 테스트 이미지 로드 (과제 2용 이미지, 예: rose.png)
-img_path = "0312/images/rose.png"
+base_dir = Path(__file__).parent
+img_path = str(base_dir / "images" / "rose.png")
 if not os.path.exists(img_path):
     print(f"Error: {img_path} not found! Using left01.jpg instead.")
-    img_path = "0312/images/calibration_images/left01.jpg"
+    img_path = str(base_dir / "images" / "calibration_images" / "left01.jpg")
 
 img = cv2.imread(img_path)
 h, w = img.shape[:2]

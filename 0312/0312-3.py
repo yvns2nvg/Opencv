@@ -2,16 +2,20 @@ import cv2
 import numpy as np
 from pathlib import Path
 
-# 출력 폴더 생성
-output_dir = Path("0312/outputs")
+# 현재 스크립트 위치 기준으로 경로 설정
+base_dir = Path(__file__).parent
+output_dir = base_dir / "outputs"
 output_dir.mkdir(parents=True, exist_ok=True)
 
-# 좌/우 이미지 불러오기
-left_color = cv2.imread("0312/images/left.png")
-right_color = cv2.imread("0312/images/right.png")
+# 좌/우 이미지 불러오기 (base_dir 기준 절대 경로 활용)
+left_path = base_dir / "images" / "left.png"
+right_path = base_dir / "images" / "right.png"
+
+left_color = cv2.imread(str(left_path))
+right_color = cv2.imread(str(right_path))
 
 if left_color is None or right_color is None:
-    raise FileNotFoundError("좌/우 이미지를 찾지 못했습니다. 경로를 확인해주세요.")
+    raise FileNotFoundError(f"좌/우 이미지를 찾지 못했습니다. 경로: {left_path}, {right_path}")
 
 # 카메라 파라미터
 f = 700.0
@@ -36,7 +40,6 @@ stereo = cv2.StereoBM_create(numDisparities=16*5, blockSize=15)
 disparity_16S = stereo.compute(left_gray, right_gray)
 disparity = disparity_16S.astype(np.float32) / 16.0
 
-
 # -----------------------------
 # 2. Depth 계산
 # Z = fB / d
@@ -47,7 +50,6 @@ depth_map = np.zeros_like(disparity, dtype=np.float32)
 
 # Z = (f * B) / d
 depth_map[valid_mask] = (f * B) / disparity[valid_mask]
-
 
 # -----------------------------
 # 3. ROI별 평균 disparity / depth 계산
@@ -68,7 +70,6 @@ for name, (x, y, w, h) in rois.items():
         
     results[name] = {"disparity": mean_disp, "depth": mean_depth}
 
-
 # -----------------------------
 # 4. 결과 출력
 # -----------------------------
@@ -87,7 +88,6 @@ if filtered_results:
     print(f"가장 먼 객체 (제일 Depth가 큼):   {farthest_roi}")
 else:
     print("유효한 연산 결과가 없습니다.")
-
 
 # -----------------------------
 # 5. disparity 시각화
@@ -161,10 +161,9 @@ cv2.imwrite(str(output_dir / "depth_map.png"), depth_color)
 cv2.imwrite(str(output_dir / "left_roi.png"), left_vis)
 
 # -----------------------------
-# 9. 화면에 띄우기 (필요시)
+# 9. 출력
 # -----------------------------
-# 창 크기가 너무 커 불편할 수 있어 크기 조절 후 출력
-scale_preview = 0.5
+scale_preview = 1.0
 h_disp, w_disp = disparity_color.shape[:2]
 disp_preview = cv2.resize(disparity_color, (int(w_disp*scale_preview), int(h_disp*scale_preview)))
 depth_preview = cv2.resize(depth_color, (int(w_disp*scale_preview), int(h_disp*scale_preview)))
