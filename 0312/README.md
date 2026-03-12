@@ -1,10 +1,8 @@
 # OpenCV Image Formation 실습 과제 (0312)
 
-이 저장소는 `L02_Image_Formation` 강의 실습 과제 3가지의 코드가 포함되어 있습니다.
-
 ---
 
-## 📌 과제 1: 체크보드 기반 카메라 캘리브레이션 (`0312-1.py`)
+##  과제 1: 체크보드 기반 카메라 캘리브레이션 (`0312-1.py`)
 
 ### 1. 문제 정의
 *   여러 장의 체크보드 이미지에서 코너를 검출하고 실제 3D 좌표와의 대응 관계를 바탕으로 카메라 파라미터(내부 행렬, 왜곡 계수)를 추정합니다.
@@ -98,7 +96,7 @@ cv2.destroyAllWindows()
 
 ---
 
-## 📌 과제 2: 이미지 Rotation & Transformation (`0312-2.py`)
+##  과제 2: 이미지 Rotation & Transformation (`0312-2.py`)
 
 ### 1. 문제 정의
 *   단일 이미지에 기하학적 변환(회전, 스케일링, 평행이동)을 동시에 적용합니다.
@@ -161,7 +159,7 @@ cv2.destroyAllWindows()
 
 ---
 
-## 📌 과제 3: Stereo Disparity 기반 Depth 추정 (`0312-3.py`)
+##  과제 3: Stereo Disparity 기반 Depth 추정 (`0312-3.py`)
 
 ### 1. 문제 정의
 *   같은 장면을 바라보는 Left / Right 이미지 쌍을 이용해, 양안 시차(Disparity)를 계산합니다.
