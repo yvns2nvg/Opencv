@@ -31,9 +31,13 @@ M[1, 2] -= 40
 # 5. 아핀 변환 적용
 transformed_img = cv2.warpAffine(img, M, (w, h))
 
-# 6. 결과 출력
-cv2.imshow('Original Image', img)
-cv2.imshow('Transformed Image', transformed_img)
+# 6. 결과 출력 (크기 0.5배 축소)
+scale_preview = 0.5
+img_preview = cv2.resize(img, (int(w * scale_preview), int(h * scale_preview)))
+transformed_preview = cv2.resize(transformed_img, (int(w * scale_preview), int(h * scale_preview)))
+
+cv2.imshow('Original Image', img_preview)
+cv2.imshow('Transformed Image', transformed_preview)
 
 print("Rotation & Transformation 결과 시각화 중... 아무 키나 누르면 종료됩니다.")
 cv2.waitKey(0)

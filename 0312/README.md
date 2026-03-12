@@ -93,7 +93,7 @@ cv2.destroyAllWindows()
 
 ### 4. 결과 사진
 <!-- 여기에 캘리브레이션 결과 콘솔 메시지 캡처 및 전/후 이미지 캡처 삽입 -->
-![Assignment 1 결과]()
+![Assignment 1 결과](images/1-res1.png)
 
 ---
 
