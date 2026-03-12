@@ -416,3 +416,4 @@ cv2.destroyAllWindows()# 키보드 눌리면 창 모두 없애기
 ### 4. 결과 사진
 <!-- 여기에 Depth 결과물 콘솔 메세지 및 Disparity Map, Depth Map 캡처 삽입 -->
 ![Assignment 3 결과](images/3-res1.png)
+![Assignment 3 결과 2](images/3-res2.png)
