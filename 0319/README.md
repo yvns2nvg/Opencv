@@ -82,7 +82,7 @@ plt.show()
 
 ### 4. 결과 사진
 <!-- 여기에 Sobel Edge 검출 결과 시각화 캡처 삽입 (Matplotlib Figure) -->
-![Assignment 1 결과](images/1-res1.png)
+![Assignment 1 결과](0319-1.png)
 
 ---
 
@@ -173,7 +173,7 @@ plt.show()
 
 ### 4. 결과 사진
 <!-- 여기에 Canny & Hough 직선 검출 결과 시각화 캡처 삽입 -->
-![Assignment 2 결과](images/2-res1.png)
+![Assignment 2 결과](0319-2.png)
 
 ---
 
@@ -283,4 +283,4 @@ plt.show()
 
 ### 4. 결과 사진
 <!-- 여기에 GrabCut 시각화 결과물 캡처 삽입 -->
-![Assignment 3 결과](images/3-res1.png)
+![Assignment 3 결과](0319-3.png)
