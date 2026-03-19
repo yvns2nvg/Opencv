@@ -120,7 +120,7 @@ cv2.destroyAllWindows()
     ```
     > 추출한 좌표를 `calibrateCamera`에 넣고 돌리면 카메라 행렬(`K`) 및 왜곡 계수(`dist`)를 얻을 수 있습니다. 얻은 파라미터를 `undistort`에 전달해 렌즈 왜곡에 의해 휘어진 부분을 반듯하게 폅니다.
 
-### 4. 결과 사진
+### 4. 결과 사진(매트릭스, 왜곡계수)
 <!-- 여기에 캘리브레이션 결과 콘솔 메시지 캡처 및 전/후 이미지 캡처 삽입 -->
 ![Assignment 1 결과](images/1-res1.png)
 ![Assignment 1 결과 2](images/1-res2.png)
