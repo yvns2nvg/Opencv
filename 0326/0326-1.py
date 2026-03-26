@@ -43,4 +43,4 @@ plt.axis('off')
 
 plt.tight_layout()
 plt.savefig(os.path.join(base_dir, '0326-1.png'))
-# plt.show()
+plt.show()
