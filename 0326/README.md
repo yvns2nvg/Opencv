@@ -155,8 +155,8 @@ plt.savefig(os.path.join(base_dir, '0326-2.png'))
 ##  과제 3: 호모그래피를 이용한 이미지 정합 (Image Alignment) (`0326-3.py`)
 
 ### 1. 문제 정의
-*   `img1.jpg`와 `img2.jpg`의 SIFT 특징점을 활용해 매칭하고 일치하는 점들을 바탕으로 호모그래피(Homography) 변환 행렬을 추정합니다.
-*   도출된 행렬을 이용해 `img1`을 대상의 시점으로 형태를 변환(Perspective Warp)시키고 서로 겹치게 하여 간단한 파노라마 형태의 정합(Alignment)을 달성합니다.
+*   `img2.jpg`와 `img3.jpg`의 SIFT 특징점을 활용해 매칭하고 일치하는 점들을 바탕으로 호모그래피(Homography) 변환 행렬을 추정합니다.
+*   도출된 행렬을 이용해 `img3`을 대상의 시점으로 형태를 변환(Perspective Warp)시키고 서로 겹치게 하여 간단한 파노라마 형태의 정합(Alignment)을 달성합니다.
 
 ### 2. 전체 코드 (0326-3.py)
 ```python
@@ -166,9 +166,9 @@ import matplotlib.pyplot as plt
 import os
 
 base_dir = os.path.dirname(os.path.abspath(__file__))
-# 요구사항: 샘플파일로 img1.jpg, img2.jpg 사용
-img1_path = os.path.join(base_dir, 'img1.jpg')
-img2_path = os.path.join(base_dir, 'img2.jpg')
+# 요구사항: 샘플파일로 img2.jpg, img3.jpg 사용
+img1_path = os.path.join(base_dir, 'img2.jpg')
+img2_path = os.path.join(base_dir, 'img3.jpg')
 
 img1 = cv.imread(img1_path)
 img2 = cv.imread(img2_path)
