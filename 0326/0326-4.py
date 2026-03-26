@@ -59,23 +59,31 @@ warped_img2 = cv.warpPerspective(img2_rgb, H, (result_w, result_h))
 warped_img1 = np.zeros((result_h, result_w, 3), dtype=np.uint8)
 warped_img1[0:h1, 0:w1] = img1_rgb
 
-# 🌟 경계 지우기 알고리즘 (Alpha Blending / Average Blending) 🌟
-# 사용자 아이디어 💡: 겹치는 부분의 픽셀 간 색깔 차이를 비교/혼합
-# 이미지가 존재하는 영역의 마스크 생성 (0: 빈 공간, 1: 이미지 있음)
-mask1 = (warped_img1 > 0).astype(np.float32)
-mask2 = (warped_img2 > 0).astype(np.float32)
+# 🌟 심화 경계 지우기 알고리즘 (Distance Transform 기반 Feathering Blending) 🌟
+# 단순 평균이 아닌, 사진 중심부에 가까울수록 가중치를 더 주는 그라데이션 방식 도입
+mask1_gray = cv.cvtColor(warped_img1, cv.COLOR_RGB2GRAY)
+mask2_gray = cv.cvtColor(warped_img2, cv.COLOR_RGB2GRAY)
 
-# 두 이미지를 더함 (겹치는 부분은 픽셀값이 2배가 됨)
-blended_img = warped_img1.astype(np.float32) + warped_img2.astype(np.float32)
+mask1 = (mask1_gray > 0).astype(np.uint8)
+mask2 = (mask2_gray > 0).astype(np.uint8)
 
-# 마스크도 더함 (겹치는 부분은 마스크 값이 2가 됨)
-mask_sum = mask1 + mask2
+# 이미지의 가장자리에서부터 안쪽으로 거리를 측정 (경계는 0, 안쪽은 값이 커짐)
+dist1 = cv.distanceTransform(mask1, cv.DIST_L2, 5)
+dist2 = cv.distanceTransform(mask2, cv.DIST_L2, 5)
 
-# 나누기 연산 시 0으로 나누는 것을 방지
-mask_sum[mask_sum == 0] = 1
+dist_sum = dist1 + dist2
+dist_sum[dist_sum == 0] = 1e-6 # 0 나누기 방지
 
-# 결과적으로 겹치는 픽셀은 /2 가 되어 부드럽게 평균 색상으로 혼합됨 (Seam Blending 효과)
-blended_img = (blended_img / mask_sum).astype(np.uint8)
+# 픽셀마다 투명도(가중치) 비율 맵 생성: 경계에서 서서히 0.0 ~ 1.0으로 변환됨
+alpha1 = dist1 / dist_sum
+alpha2 = dist2 / dist_sum
+
+# 3채널(RGB) 컬러 영상과 곱하기 위해 축 늘리기
+alpha1 = cv.merge([alpha1, alpha1, alpha1])
+alpha2 = cv.merge([alpha2, alpha2, alpha2])
+
+# 최종 점진적 크로스-블렌딩
+blended_img = (warped_img1.astype(np.float32) * alpha1 + warped_img2.astype(np.float32) * alpha2).astype(np.uint8)
 
 # 결과 출력
 plt.figure(figsize=(15, 6))
