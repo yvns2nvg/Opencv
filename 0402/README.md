@@ -72,22 +72,29 @@ plt.savefig(os.path.join(base_dir, '0402-1.png'))
 ```
 
 ### 3. 요구사항 별 핵심 코드 설명
-*   **데이터셋 로드 및 전처리:**
+*   **데이터셋 로드 및 전처리 (Normalization):**
     ```python
     mnist = tf.keras.datasets.mnist
     (x_train, y_train), (x_test, y_test) = mnist.load_data()
     x_train, x_test = x_train / 255.0, x_test / 255.0
     ```
-    > `keras`에서 제공하는 MNIST 데이터를 불러온 후, 픽셀 값(0~255)을 0~1 사이로 정규화(Normalization)하여 모델이 더 빠르고 정확하게 학습할 수 있도록 합니다.
-*   **신경망 모델 구축:**
+    > **원리:** 흑백 이미지인 MNIST는 각 픽셀이 0~255 사이의 정수값을 가집니다. 이를 `255.0`으로 나누어 0.0~1.0 사이의 실수 값으로 스케일링(정규화)합니다.
+    > **이유:** 값의 범위를 작게 만들면 경사 하강법(Gradient Descent) 모델이 학습할 때 가중치(Weight) 업데이트가 더 빠르고 안정적으로 이루어지기 때문입니다. 즉, 정확도와 수렴 속도를 높이기 위한 필수 과정입니다.
+
+*   **신경망 모델 구축 (MLP 구조):**
     ```python
     model = models.Sequential([
         layers.Flatten(input_shape=(28, 28)),
         layers.Dense(128, activation='relu'),
+        layers.Dropout(0.2), # 추가로 사용된 계층 (과적합 방지)
         layers.Dense(10, activation='softmax')
     ])
     ```
-    > 28x28 크기의 2차원 이미지를 1차원(784)으로 펴주는 `Flatten`을 사용하며, 이후 `relu` 활성화 함수를 통과하는 크기 128의 `Dense` 계층을 거칩니다. 다중 클래스 분류이므로 마지막엔 크기 10(0~9)의 `softmax` 출력을 반환합니다.
+    > 여기서 `Sequential`은 각 층을 순차적으로 쌓는 모델임을 의미합니다.
+    > 1. **`Flatten`**: 28x28 크기의 2차원 이미지를 1차원 배열(길이 784)로 쭉 펴줍니다(평탄화). 모델의 입력층 역할을 합니다.
+    > 2. **`Dense(128, activation='relu')`**: 128개의 노드를 가진 은닉층(Hidden Layer)입니다. 모든 픽셀의 입력과 촘촘히 연결되는 완전 연결 계층(Fully-Connected Layer)이며, `relu` 함수는 음수 값을 0으로 차단하여 모델이 직선뿐 아니라 복잡한 패턴(비선형성)도 학습할 수 있게 해줍니다.
+    > 3. **`Dropout(0.2)`**: 학습 과정에서 랜덤하게 20%의 노드를 끄고 학습합니다. 특정 데이터나 특정 노드에 과도하게 치우쳐서 훈련 데이터를 외워버리는 현상(과적합, Overfitting)을 방지합니다.
+    > 4. **`Dense(10, activation='softmax')`**: 숫자가 0부터 9까지 10개 클래스이므로, 출력층의 노드는 10개로 설정합니다. `softmax`는 10개 노드의 출력값 총합이 딱 1.0(100%)이 되도록 변환해 주어, 최종 결과를 '확률'처럼 직관적으로 해석할 수 있게 만듭니다.
 
 ### 4. 결과 사진
 ![Assignment 1 결과](0402-1.png)
@@ -197,8 +204,9 @@ plt.savefig(os.path.join(base_dir, '0402-2.png'))
     model = models.Sequential([
         layers.Conv2D(32, (3, 3), padding='same', activation='relu', input_shape=(32, 32, 3)),
         layers.BatchNormalization(),
-        ...
+        layers.MaxPooling2D((2, 2)),
         layers.Dropout(0.25),
+        ...
         layers.Flatten(),
         layers.Dense(128, activation='relu'),
         layers.BatchNormalization(),
@@ -206,14 +214,23 @@ plt.savefig(os.path.join(base_dir, '0402-2.png'))
         layers.Dense(10, activation='softmax')
     ])
     ```
-    > 개선된 모델에서는 각 합성곱(`Conv2D`) 층에 `padding='same'`을 추가하여 공간 차원을 유지하고, 레이어 출력 정규화를 위해 `BatchNormalization`을 추가하여 안정적이고 빠른 학습을 돕습니다. 또한 각 블록 이후에 `Dropout`을 배치하여 과적합(Overfitting)을 최소화하였습니다. 최종적으로 평탄화(`Flatten`) 후 `Dense` 레이어를 통과하여 추출된 특징들로 각 클래스 확률을 추론합니다.
-*   **테스트 이미지 예측 처리:**
+    > 일반 다층 퍼셉트론(MLP)과 달리, 이미지의 픽셀 간 2차원 공간 정보를 살리는 **CNN 아키텍처**를 적용했습니다.
+    > 1. **`Conv2D`**: (3, 3) 크기의 필터 창이 이미지를 조금씩 훑으며 선, 모서리 등 공간적인 핵심 특징(Feature)을 도장 찍듯 추출합니다. `padding='same'`을 부여하면 계산할 때 이미지 외곽에 0을 덧대어 출력 이미지 사이즈가 줄어들지 않도록 유지해 줍니다.
+    > 2. **`BatchNormalization`**: 각 계층을 통과할 때마다 데이터의 분포값이 요동치는 것을 막기 위해 평균과 분산을 재조정합니다. 학습 속도를 크게 높이고 높은 안정성을 제공합니다.
+    > 3. **`MaxPooling2D`**: (2, 2) 크기의 영역 안에서 가장 수치가 강한 픽셀값 하나만 뽑아내어 이미지의 해상도를 절반으로 축소합니다. 불필요한 공간 정보와 연산량을 줄이고 중요한 특성만 요약해 남기는 압축(풀링) 작업입니다.
+    > 4. **`Flatten` & `Dense`**: CNN 층들의 연쇄 작업 결과물로 나온 압축된 2차원 특징 맵들을 `Flatten`으로 길게 한 줄로 펴준 뒤(1차원), 일반적인 `Dense` 계층을 통과시켜 서로 엮은 다음 10개 카테고리에 대한 최종 추측 확률(`softmax`)을 환산해냅니다.
+
+*   **테스트 이미지 예측 처리 (커스텀 데이터 추론):**
     ```python
     test_img_resized = cv2.resize(test_img_rgb, (32, 32))
     input_img = np.expand_dims(test_img_resized, axis=0) / 255.0
     predictions = model.predict(input_img)
     ```
-    > 모델 예측에 직접 임의의 이미지(`dog.jpg`)를 사용하기 위해, 이미지를 로컬에서 읽은 후 모델 학습에 사용된 크기와 포맷(`32x32`, `RGB`, `배치 차원 확장`, `픽셀 스케일 정규화`)을 똑같이 맞춰 입력 데이터 차원 형태(`[1, 32, 32, 3]`)로 가공해주었습니다. 이렇게 전처리된 데이터를 `predict`에 넣어 가장 추측 확률이 높은 클래스를 뽑아냅니다.
+    > 만들어진 모델이 실제로 새로운 사진 파일(`dog.jpg`)을 어떻게 예측하는지 시도하는 과정입니다. 이를 위해서는 모델이 훈련할 때 먹었던 데이터와 입력 형식을 완전히 똑같이 맞춰주어야 합니다.
+    > 1. **`cv2.resize(..., (32, 32))`**: 원본 사진(`dog.jpg`)의 사이즈가 제각각이므로, 모델이 학습했던 규격인 32x32 정사각형 크기로 강제 축소/변환합니다.
+    > 2. **`np.expand_dims(..., axis=0)`**: 케라스(Keras) 모델은 하나를 예측할 때도 (데이터 개수=배치 단위, 세로, 가로, 색상채널) 형태의 4차원 데이터 구조를 기대합니다. 테스트 사진은 1장이므로 `[32, 32, 3]` 형태를 껍질 하나 더 씌워 `[1, 32, 32, 3]` 형태로 차원을 추가 확장해 줍니다.
+    > 3. **`/ 255.0`**: 픽셀값이 0~255인 상태이므로, 학습할 때처럼 스케일링(정규화)하여 0~1 사이로 값을 나눕니다.
+    > 4. **`model.predict`**: 모델에 사진을 집어넣으면 [비행기, 자동차, 새... 고양이, 개, 개구리...] 10가지 값에 대응하는 각 확률 퍼센티지가 담긴 넘파이 배열이 나옵니다. 여기서 `np.argmax(predictions)`를 사용하여 가장 확률이 높은 항목의 인덱스를 찾아내어 최종 결론으로 도출합니다.
 
 ### 4. 결과 사진
 ![Assignment 2 결과](0402-2.png)
