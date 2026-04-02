@@ -20,15 +20,26 @@ x_train, x_test = x_train / 255.0, x_test / 255.0
 class_names = ['airplane', 'automobile', 'bird', 'cat', 'deer',
                'dog', 'frog', 'horse', 'ship', 'truck']
 
-# 2. CNN 모델 구축
+# 2. CNN 모델 구축 (개선된 모델)
 model = models.Sequential([
-    layers.Conv2D(32, (3, 3), activation='relu', input_shape=(32, 32, 3)),
+    layers.Conv2D(32, (3, 3), padding='same', activation='relu', input_shape=(32, 32, 3)),
+    layers.BatchNormalization(),
+    layers.Conv2D(32, (3, 3), padding='same', activation='relu'),
+    layers.BatchNormalization(),
     layers.MaxPooling2D((2, 2)),
-    layers.Conv2D(64, (3, 3), activation='relu'),
+    layers.Dropout(0.25),
+
+    layers.Conv2D(64, (3, 3), padding='same', activation='relu'),
+    layers.BatchNormalization(),
+    layers.Conv2D(64, (3, 3), padding='same', activation='relu'),
+    layers.BatchNormalization(),
     layers.MaxPooling2D((2, 2)),
-    layers.Conv2D(64, (3, 3), activation='relu'),
+    layers.Dropout(0.25),
+
     layers.Flatten(),
-    layers.Dense(64, activation='relu'),
+    layers.Dense(128, activation='relu'),
+    layers.BatchNormalization(),
+    layers.Dropout(0.5),
     layers.Dense(10, activation='softmax')
 ])
 
@@ -39,7 +50,7 @@ model.compile(optimizer='adam',
 
 # 3. 모델 훈련
 print("---- CNN 모델 훈련 시작 ----")
-history = model.fit(x_train, y_train, epochs=5, validation_data=(x_test, y_test))
+history = model.fit(x_train, y_train, epochs=15, batch_size=64, validation_data=(x_test, y_test))
 print("---- CNN 모델 훈련 완료 ----")
 
 # 4. 모델 평가 및 dog.jpg 테스트 예측 진행

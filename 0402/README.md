@@ -123,15 +123,26 @@ x_train, x_test = x_train / 255.0, x_test / 255.0
 class_names = ['airplane', 'automobile', 'bird', 'cat', 'deer',
                'dog', 'frog', 'horse', 'ship', 'truck']
 
-# 2. CNN 모델 구축
+# 2. CNN 모델 구축 (개선된 모델)
 model = models.Sequential([
-    layers.Conv2D(32, (3, 3), activation='relu', input_shape=(32, 32, 3)),
+    layers.Conv2D(32, (3, 3), padding='same', activation='relu', input_shape=(32, 32, 3)),
+    layers.BatchNormalization(),
+    layers.Conv2D(32, (3, 3), padding='same', activation='relu'),
+    layers.BatchNormalization(),
     layers.MaxPooling2D((2, 2)),
-    layers.Conv2D(64, (3, 3), activation='relu'),
+    layers.Dropout(0.25),
+
+    layers.Conv2D(64, (3, 3), padding='same', activation='relu'),
+    layers.BatchNormalization(),
+    layers.Conv2D(64, (3, 3), padding='same', activation='relu'),
+    layers.BatchNormalization(),
     layers.MaxPooling2D((2, 2)),
-    layers.Conv2D(64, (3, 3), activation='relu'),
+    layers.Dropout(0.25),
+
     layers.Flatten(),
-    layers.Dense(64, activation='relu'),
+    layers.Dense(128, activation='relu'),
+    layers.BatchNormalization(),
+    layers.Dropout(0.5),
     layers.Dense(10, activation='softmax')
 ])
 
@@ -142,7 +153,7 @@ model.compile(optimizer='adam',
 
 # 3. 모델 훈련
 print("---- CNN 모델 훈련 시작 ----")
-history = model.fit(x_train, y_train, epochs=5, validation_data=(x_test, y_test))
+history = model.fit(x_train, y_train, epochs=15, batch_size=64, validation_data=(x_test, y_test))
 print("---- CNN 모델 훈련 완료 ----")
 
 # 4. 모델 평가 및 dog.jpg 예측 (Prediction)
@@ -184,15 +195,18 @@ plt.savefig(os.path.join(base_dir, '0402-2.png'))
 *   **합성곱 신경망(CNN) 층 구성:**
     ```python
     model = models.Sequential([
-        layers.Conv2D(32, (3, 3), activation='relu', input_shape=(32, 32, 3)),
-        layers.MaxPooling2D((2, 2)),
+        layers.Conv2D(32, (3, 3), padding='same', activation='relu', input_shape=(32, 32, 3)),
+        layers.BatchNormalization(),
         ...
+        layers.Dropout(0.25),
         layers.Flatten(),
-        layers.Dense(64, activation='relu'),
+        layers.Dense(128, activation='relu'),
+        layers.BatchNormalization(),
+        layers.Dropout(0.5),
         layers.Dense(10, activation='softmax')
     ])
     ```
-    > 이미지 인식에 탁월한 `Conv2D` 계층으로 특징 맵(Feature Map)을 추출하고, `MaxPooling2D`로 중요 정보는 유지하면서 공간의 크기를 줄입니다. 최종적으로 이를 1차원 데이터로 평탄화(`Flatten`)시킨 후에 `Dense` 레이어들을 통해 가장 가능성이 높은 클래스의 확률을 추론하도록 모델을 정의했습니다.
+    > 개선된 모델에서는 각 합성곱(`Conv2D`) 층에 `padding='same'`을 추가하여 공간 차원을 유지하고, 레이어 출력 정규화를 위해 `BatchNormalization`을 추가하여 안정적이고 빠른 학습을 돕습니다. 또한 각 블록 이후에 `Dropout`을 배치하여 과적합(Overfitting)을 최소화하였습니다. 최종적으로 평탄화(`Flatten`) 후 `Dense` 레이어를 통과하여 추출된 특징들로 각 클래스 확률을 추론합니다.
 *   **테스트 이미지 예측 처리:**
     ```python
     test_img_resized = cv2.resize(test_img_rgb, (32, 32))
