@@ -49,9 +49,9 @@ model.compile(optimizer='adam',
               metrics=['accuracy'])
 
 # 3. 모델 훈련
-print("---- CNN 모델 훈련 시작 ----")
+print("CNN 모델 훈련 시작 ")
 history = model.fit(x_train, y_train, epochs=15, batch_size=64, validation_data=(x_test, y_test))
-print("---- CNN 모델 훈련 완료 ----")
+print(" CNN 모델 훈련 완료 ")
 
 # 4. 모델 평가 및 dog.jpg 테스트 예측 진행
 test_loss, test_acc = model.evaluate(x_test,  y_test, verbose=2)
