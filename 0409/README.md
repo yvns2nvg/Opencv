@@ -123,7 +123,9 @@ if __name__ == '__main__':
 
 
 ### 4. 결과 영상
-![Assignment 1 결과](0409-1_output.mp4)
+<video src="https://github.com/yvns2nvg/Opencv/raw/main/0409/0409-1_output.mp4" controls="controls" width="100%"></video>
+
+*(위 영상 링크가 브라우저 환경에 따라 바로 재생되지 않을 경우, **[👉 여기를 클릭하여 결과 영상 보기](https://github.com/yvns2nvg/Opencv/blob/main/0409/0409-1_output.mp4)**)*
 
 ---
 
