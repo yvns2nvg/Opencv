@@ -15,7 +15,8 @@ def main():
     )
     
     # OpenCV 웹캠 캡처 시작
-    cap = cv2.VideoCapture(0)
+    # (맥 환경에서는 아이폰 연속성 카메라 기능 때문에 내장 캠이 1번 인덱스로 잡히는 경우가 많습니다)
+    cap = cv2.VideoCapture(1)
     
     if not cap.isOpened():
         print("웹캠을 열 수 없습니다.")
