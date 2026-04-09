@@ -33,6 +33,16 @@ def main():
         print("비디오를 열 수 없습니다.")
         sys.exit()
 
+    # VideoWriter 설정
+    width = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
+    height = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
+    fps = cap.get(cv2.CAP_PROP_FPS)
+    if fps == 0:
+        fps = 30.0 # 기본값
+    out_video_path = os.path.join(base_dir, "0409-1_output.mp4")
+    fourcc = cv2.VideoWriter_fourcc(*'mp4v')
+    video_writer = cv2.VideoWriter(out_video_path, fourcc, fps, (width, height))
+
     # SORT 추적기 초기화
     tracker = Sort()
     frame_idx = 0
@@ -106,8 +116,9 @@ def main():
             label = f"ID: {track_id}"
             cv2.putText(frame, label, (dx1, dy1 - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.6, (0, 255, 0), 2)
             
-        # 프레임 시각화
+        # 프레임 시각화 및 영상 저장
         cv2.imshow("Multi-Object Tracking (SORT)", frame)
+        video_writer.write(frame)
         
         # 특정 프레임(약 50프레임)에서 결과 캡처하여 README 용 저장
         if frame_idx == 50:
@@ -119,6 +130,7 @@ def main():
             break
             
     cap.release()
+    video_writer.release()
     cv2.destroyAllWindows()
 
 if __name__ == "__main__":
