@@ -40,7 +40,8 @@ def main():
     if fps == 0:
         fps = 30.0 # 기본값
     out_video_path = os.path.join(base_dir, "0409-1_output.mp4")
-    fourcc = cv2.VideoWriter_fourcc(*'mp4v')
+    # GitHub 등 웹에서 바로 재생하려면 avc1 (H.264) 코덱 사용이 필요하여 수정
+    fourcc = cv2.VideoWriter_fourcc(*'avc1')
     video_writer = cv2.VideoWriter(out_video_path, fourcc, fps, (width, height))
 
     # SORT 추적기 초기화
