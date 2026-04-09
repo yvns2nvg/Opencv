@@ -122,10 +122,8 @@ if __name__ == '__main__':
 *   **SORT 추적기(`tracker = Sort()`):** 앞서 검출된 N개의 바운딩 박스를 `[x1, y1, x2, y2, confidence]`의 numpy 배열 형태로 변환 후 전달합니다. 그러면 내부의 *상태 예측 모델(칼만 필터)*과 *데이터 매칭 방법론(헝가리안 매칭)*을 통해, 동일한 차량 객체가 다른 사람이나 프레임 끊김에 상관없이 같은 고유한 번호(ID)를 이어 나갈 수 있도록 보장해 줍니다!
 
 
-### 4. 결과 영상
-<video src="https://github.com/yvns2nvg/Opencv/raw/main/0409/0409-1_output.mp4" controls="controls" width="100%"></video>
-
-*(위 영상 링크가 브라우저 환경에 따라 바로 재생되지 않을 경우, **[👉 여기를 클릭하여 결과 영상 보기](https://github.com/yvns2nvg/Opencv/blob/main/0409/0409-1_output.mp4)**)*
+### 4. 결과 사진
+![Assignment 1 결과](0409-1.png)
 
 ---
 
